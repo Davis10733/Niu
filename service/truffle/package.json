@@ -1,0 +1,11 @@
+{
+  "name": "writer-manager",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "base-58": "^0.0.1",
+    "web3": "^0.20.4",
+    "zeppelin-solidity": "^1.6.0"
+  }
+}
