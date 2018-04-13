@@ -38,6 +38,20 @@ contract WriterManager is Ownable {
     return true;
   }
 
+  function createNewPostByManager(bytes32 ipfsHash, address writerAddress)
+    public 
+    onlyOwner
+    returns(bool success)
+  {
+    if (!isWriter(writerAddress)) {
+      revert();
+    }
+    writers.insertPost(ipfsHash, writerAddress);
+    NewPostCreated(ipfsHash, writerAddress);
+
+    return true;
+  }
+
   function getAllPosts(address writerAddress) 
     public
     view

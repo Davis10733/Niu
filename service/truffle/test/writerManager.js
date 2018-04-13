@@ -51,6 +51,17 @@ contract('WriterManager', (accounts) => {
     assert.equal(recoverHash, ipfsHash)
   })
 
+  it('it is allowed to add article by manager', async() => {
+    await writerManager.createNewWriter(accounts[1], { from: accounts[0] })
+    const unit8Array = fromIPFShash(ipfsHash)
+    const hex = Buffer.from(unit8Array).toString('hex')
+    const transaction = await writerManager.createNewPostByManager(`0x${hex}`, accounts[1],{ from: accounts[0] })
+    assert.isTrue(transaction.logs[0].event === 'NewPostCreated')
+    
+    const recoverHash = toIPFShash(transaction.logs[0].args.ipfsHash)
+    assert.equal(recoverHash, ipfsHash)
+  })
+
   const fromIPFShash = (hash) => {
     const bytes = Base58.decode(hash)
     const multiHashId = 2
