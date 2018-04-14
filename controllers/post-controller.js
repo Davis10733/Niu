@@ -7,9 +7,16 @@ module.exports = {
         content: Buffer.from(JSON.stringify(ctx.request.body))
       }])
 
-      ctx.body = files[0].hash
+      const ipfsHash = files[0].hash
+      
+      const etherumEvents = await ctx.app.helpers.ethereum.createNewPost(ctx, ipfsHash, ctx.request.body.writer)
+
+      ctx.body = {
+        success: true
+      }
     } catch (e) {
       console.log(e)
+      ctx.throw(e.status, e.message)
     }
   }, 
 
