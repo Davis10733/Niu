@@ -70,8 +70,8 @@ contract('WriterManager', (accounts) => {
 
   const toIPFShash = (hex) => {
     const remove0x = hex.slice(2, hex.length)
-    const bytes = Buffer.from(`1220${remove0x}`, "hex");
-    const hash = Base58.encode(bytes);
-    return hash;
+    const bytes = Buffer.from(`1220${remove0x}`, "hex")
+    const hash = Base58.encode(bytes)
+    return hash
   }
 })
