@@ -1,15 +1,18 @@
 {
   "name": "ds-news",
   "dependencies": {
+    "base-58": "^0.0.1",
     "dotenv": "^5.0.1",
     "ipfs-api": "^20.0.0",
     "kcors": "^2.2.1",
+    "keythereum": "^1.0.2",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
     "koa-helmet": "^4.0.0",
     "koa-logger": "^3.2.0",
     "koa-pagination": "^3.0.0",
     "koa-router": "^7.4.0",
-    "lodash": "^4.17.5"
+    "lodash": "^4.17.5",
+    "web3": "^1.0.0-beta.33"
   }
 }
