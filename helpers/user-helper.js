@@ -9,7 +9,7 @@ module.exports = {
 
     // create key
     let dk = keythereum.create()
-    let keyObject = keythereum.dump(hashPw, dk.privateKey, dk.salt, dk.iv)
+    let keyObject = keythereum.dump(ctx.request.body.password, dk.privateKey, dk.salt, dk.iv)
 
     return {
       username: ctx.request.body.username,
