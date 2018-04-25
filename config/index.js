@@ -2,6 +2,7 @@ const _ = require('lodash')
 
 module.exports = {
   server: {
+    host: _.defaultTo(process.env.HOST, 'localhost'),
     port: normalizePort(_.defaultTo(process.env.PORT, 3000))
   },
   ipfs: {
@@ -16,7 +17,17 @@ module.exports = {
     contract: {
       address: process.env.ETHEREUM_CONTRACT_ADDRESS,
     }
-  }
+  },
+  mail: {
+    publicKey: process.env.MJ_APIKEY_PUBLIC,
+    privateKey: process.env.MJ_APIKEY_PRIVATE,
+  },
+  db: {
+    database: _.defaultTo(process.env.MYSQL_DATABASE, 'insider'),
+    user: _.defaultTo(process.env.MYSQL_USER, 'mysql'),
+    password: _.defaultTo(process.env.MYSQL_PASSWORD, 'test'),
+    host: _.defaultTo(process.env.MYSQL_HOST, 'localhost')
+  },
 }
 
 function normalizePort(val) {
