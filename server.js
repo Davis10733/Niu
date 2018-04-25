@@ -29,6 +29,9 @@ app.use(bodyParser(config.bodyParser))
 app.use(routes.routes())
 app.use(routes.allowedMethods())
 
+require('./schemas')(app)
+require('./models')(app)
+
 const router = new Router()
 
 router.get('*', async ctx => {
