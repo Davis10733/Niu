@@ -1,5 +1,5 @@
 {
-  "name": "ds-news",
+  "name": "insider",
   "dependencies": {
     "base-58": "^0.0.1",
     "dotenv": "^5.0.1",
