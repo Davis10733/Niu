@@ -1,5 +1,9 @@
 {
   "name": "insider",
+  "scripts": {
+    "dev": "docker-compose up -d && node server.js",
+    "create-db": "./node_modules/.bin/sequelize db:migrate --config ./service/database/config/config.json  --migrations-path ./service/database/migrations"
+  },
   "dependencies": {
     "base-58": "^0.0.1",
     "dotenv": "^5.0.1",
