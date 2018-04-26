@@ -17,7 +17,6 @@ module.exports = {
       address: keyObject.address, 
       keyObject: keyObject,
       email: ctx.request.body.email,
-      active: false,
     }
   }
 }
