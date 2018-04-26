@@ -11,14 +11,14 @@ const getMessage = (userObject) => {
     'To': [
       {
         'Email': userObject.email,
-        'Name': userObject.username,
+        'Name': 'New insider',
       }
     ],
     "TemplateID": 369034,
     "TemplateLanguage": true,
     "Subject": "Welcome to INSIDER",
     "Variables": {
-       "confirmation_link": `${config.server.host}/active?address=${userObject.address}`
+       "confirmation_link": `${config.server.host}/active?email=${userObject.email}`
     }
   }
 }
