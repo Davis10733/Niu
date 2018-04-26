@@ -15,10 +15,10 @@ module.exports = {
         password: Sequelize.STRING,
         address: Sequelize.STRING,
         keyObject: Sequelize.JSON,
-        active: Sequelize.BOOLEAN,
+        activeCode: Sequelize.BIGINT,
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
-    }).then(() => queryInterface.addIndex('users', { fields: ['email'] }))
+    }).then(() => queryInterface.addIndex('users', { fields: ['email'], unique: true }))
   },
 
   down: (queryInterface, Sequelize) => {
