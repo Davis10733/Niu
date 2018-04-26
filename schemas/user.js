@@ -1,13 +1,14 @@
 const yup = require('yup')
 
 const createSchema = yup.object().shape({
-  username: yup.string().required(),
   email: yup.string().email().required(),
-  password: yup.string().required(),
+  username: yup.string(),
+  password: yup.string(),
 })
 
 const activeSchema = yup.object().shape({
-  address: yup.string().required(),
+  email: yup.string().email().required(),
+  activeCode: yup.number().required(),
 })
 
 module.exports = {
