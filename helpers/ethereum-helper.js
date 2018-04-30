@@ -2,8 +2,8 @@ const keythereum = require('keythereum');
 const config = require('../config')
 const Web3 = require('web3')
 const web3 = new Web3(`ws://${config.ethereum.host}:${config.ethereum.port}`)
-const writerManagerContract = require('../service/truffle/build/contracts/WriterManager.json')
-const writerManager = new web3.eth.Contract(writerManagerContract.abi, config.ethereum.contract.address)
+const insiderManagerContract = require('../service/truffle/build/contracts/InsiderManager.json')
+const insiderManager = new web3.eth.Contract(insiderManagerContract.abi, config.ethereum.contract.address)
 const keystore = keythereum.importFromFile(config.ethereum.address, './')
 const Base58 = require('base-58')
 
@@ -39,7 +39,7 @@ const callContractMethod = async (ctx, contractMethod, eventName, filter) => {
   // Get event
   let events = []
   if (eventName !== undefined && filter !== undefined) {
-    events = await writerManager.getPastEvents(
+    events = await insiderManager.getPastEvents(
       eventName,
       {
         filter: filter,
@@ -72,19 +72,19 @@ const convertByte32ToIpfs = (hex) => {
 }
 
 module.exports = {
-  async registerNewWriter(ctx) {
-    const createNewWriter = writerManager.methods.createNewWriter(ctx.request.body.writer)
-    return callContractMethod(ctx, createNewWriter, 'NewWriterCreated', { newWriterAddress: ctx.request.body.writer})
+  async registerNewWriter(ctx, address) {
+    const createNewWriter = insiderManager.methods.createNewWriter(address)
+    return callContractMethod(ctx, createNewWriter, 'NewWriterCreated', { newWriterAddress: address })
   },
 
   async createNewPost(ctx, ipfsHash, writer) {
     //TODO: solve keystore
-    const createNewPost = writerManager.methods.createNewPostByManager(convertIpfsToByte32(ipfsHash), writer)
+    const createNewPost = insiderManager.methods.createNewPostByManager(convertIpfsToByte32(ipfsHash), writer)
     return callContractMethod(ctx, createNewPost, 'NewPostCreated', { ipfsHash: ipfsHash })
   },
 
   async getAllPost(ctx) {
-    const getAllPost = writerManager.methods.getAllPost(ctx.request.body.address)
+    const getAllPost = insiderManager.methods.getAllPost(ctx.request.body.address)
     return callContractMethod(ctx, getAllPost, 'GetAllPost', { writerAddress: ctx.request.body.address })
   }
 }
