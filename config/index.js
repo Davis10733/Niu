@@ -8,6 +8,7 @@ module.exports = {
   ipfs: {
     host: _.defaultTo(process.env.IPFS_HOST, 'localhost'),
     port: normalizePort(_.defaultTo(process.env.IPFS_PORT, 3000)),
+    main: _.defaultTo(process.env.IPFS_MAIN, ''),
   },
   ethereum: {
     host: _.defaultTo(process.env.ETHEREUM_HOST, 'localhost'),
