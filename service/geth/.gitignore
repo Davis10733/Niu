@@ -1,0 +1,6 @@
+chaindata/
+LOCK
+nodekey
+transactions.rlp
+nodes/
+lightchaindata/
