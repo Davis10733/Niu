@@ -4,7 +4,8 @@
     "dev": "docker-compose up -d && node server.js",
     "drop-db": "./node_modules/.bin/sequelize db:drop --config ./service/database/config/config.json",
     "create-db": "./node_modules/.bin/sequelize db:create --config ./service/database/config/config.json",
-    "create-table": "./node_modules/.bin/sequelize db:migrate --config ./service/database/config/config.json  --migrations-path ./service/database/migrations"
+    "create-table": "./node_modules/.bin/sequelize db:migrate --config ./service/database/config/config.json  --migrations-path ./service/database/migrations",
+    "geth-run": "geth --ws --wsport \"8546\" --wsorigins \"*\" --wsaddr=\"0.0.0.0\" --rpc --rpcport \"8545\" --rpccorsdomain \"*\" --rpcaddr=\"0.0.0.0\" --rpcapi \"personal,admin,db,eth,miner,net,web3,txpool,clique\" --datadir ./service --keystore ./service/geth/keystore console"
   },
   "dependencies": {
     "base-58": "^0.0.1",
