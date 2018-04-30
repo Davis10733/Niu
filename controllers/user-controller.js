@@ -10,13 +10,17 @@ module.exports = {
         })
 
       let user = await ctx.app.db.users.findByEmail(ctx.request.body.email)
-      
-      if (user !== undefined) {
-        if (user.address !== undefined) {
+ 
+      if (user != null) {
+        if (user.address != undefined) {
           ctx.throw(400, 'This email has been already registered')
         }
         const userObject = await ctx.app.helpers.user.createUserObject(ctx)
         await user.update(userObject)
+
+        // add account into insider manager contract
+        await ctx.app.helpers.ethereum.registerNewWriter(ctx, user.address)
+
         ctx.body = {
           'message': 'success'
         }
