@@ -11,6 +11,11 @@ const activeSchema = yup.object().shape({
   activeCode: yup.number().required(),
 })
 
+const loginSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+})
+
 module.exports = {
   name: 'user',
   create: (response) => {
@@ -18,5 +23,8 @@ module.exports = {
   },
   active: (response) => {
     return activeSchema.validate(response)
-  }
+  },
+  login: (response) => {
+    return loginSchema.validate(response)
+  },
 }
