@@ -29,6 +29,9 @@ module.exports = {
     password: _.defaultTo(process.env.MYSQL_PASSWORD, 'test'),
     host: _.defaultTo(process.env.MYSQL_HOST, 'localhost')
   },
+  jwt: {
+    secret: _.defaultTo(process.env.JWT_SECRET, 'secret')
+  }
 }
 
 function normalizePort(val) {
