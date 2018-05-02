@@ -69,5 +69,29 @@ module.exports = {
       console.log(e)
       ctx.throw(e.status, e.message)
     }
+  },
+  async login(ctx) {
+    try {
+      await ctx.app.schemas.user.login(ctx.request.body)
+        .catch(e => {
+          ctx.throw(400, e.message)
+        })
+
+      const userObject = await ctx.app.helpers.user.login(ctx)
+        .catch(e => {
+          ctx.throw(400, e.message)
+        })
+
+      const jwt = await ctx.app.helpers.user.createJwt(ctx)
+
+      ctx.body = {
+        'jwt': jwt,
+        'message': 'success'
+      }
+
+    } catch (e) {
+      console.log(e)
+      ctx.throw(e.status, e.message)
+    }
   }
 }
