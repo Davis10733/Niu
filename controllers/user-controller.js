@@ -82,7 +82,7 @@ module.exports = {
           ctx.throw(400, e.message)
         })
 
-      const jwt = await ctx.app.helpers.user.createJwt(ctx)
+      const jwt = await ctx.app.helpers.user.createJwt(userObject)
 
       ctx.body = {
         'jwt': jwt,
