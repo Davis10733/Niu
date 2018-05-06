@@ -9,7 +9,7 @@ module.exports = {
           ctx.throw(400, 'Invalid request')
         })
 
-      let user = await ctx.app.db.users.findByEmail(ctx.request.body.email)
+      let user = await ctx.app.db.User.findByEmail(ctx.request.body.email)
  
       if (user != null) {
         if (user.address != undefined) {
@@ -33,7 +33,7 @@ module.exports = {
         activeCode: activeCode,
       }
 
-      await ctx.app.db.users.create(userObject)
+      await ctx.app.db.User.create(userObject)
 
       // sending email
       await ctx.app.helpers.mail.sendActiveMail(userObject)
@@ -53,7 +53,7 @@ module.exports = {
           ctx.throw(400, e.message)
         })
 
-      let user = await ctx.app.db.users.findByEmail(ctx.request.body.email)
+      let user = await ctx.app.db.User.findByEmail(ctx.request.body.email)
       if (user == undefined) {
         ctx.throw(404, 'user not found')
       }
