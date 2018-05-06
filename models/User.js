@@ -10,26 +10,27 @@ module.exports = (sequelize, DataTypes) => {
     keyObject: DataTypes.JSON,
     activeCode: DataTypes.BIGINT,
   }
-  const user = sequelize.define('users', schema, options)
+  const User = sequelize.define('User', schema, options)
 
-  user.findByAddress = (address) => {
-    return user.findOne({
+  User.findByAddress = (address) => {
+    console.log(User)
+    return User.findOne({
       where: {
         address: address
       }
     })
   }
-  user.findByEmail = (email) => {
-    return user.findOne({
+  User.findByEmail = (email) => {
+    return User.findOne({
       where: {
         email: email
       }
     })
   }
-  user.prototype.activeUser = async function() {
+  User.prototype.activeUser = async function() {
     this.active = true
     return this.save()
   }
 
-  return user
+  return User
 }
