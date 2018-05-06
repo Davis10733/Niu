@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface
-      .createTable('users', 
+      .createTable('Users', 
       {
         id: {
           type: Sequelize.BIGINT,
@@ -18,10 +18,10 @@ module.exports = {
         activeCode: Sequelize.BIGINT,
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
-    }).then(() => queryInterface.addIndex('users', { fields: ['email'], unique: true }))
+    }).then(() => queryInterface.addIndex('Users', { fields: ['email'], unique: true }))
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('Users');
   }
 };

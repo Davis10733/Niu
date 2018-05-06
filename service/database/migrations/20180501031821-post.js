@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface
-      .createTable('posts', 
+      .createTable('Posts', 
       {
         id: {
           type: Sequelize.BIGINT,
@@ -14,10 +14,10 @@ module.exports = {
         ipfs_hash: Sequelize.STRING,
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
-    }).then(() => queryInterface.addIndex('posts', { fields: ['title'] }))
+    }).then(() => queryInterface.addIndex('Posts', { fields: ['title'] }))
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('posts');
+    return queryInterface.dropTable('Posts');
   }
 };

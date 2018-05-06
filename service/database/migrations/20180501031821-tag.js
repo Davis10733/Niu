@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface
-      .createTable('tags', 
+      .createTable('Tags', 
       {
         id: {
           type: Sequelize.BIGINT,
@@ -17,13 +17,13 @@ module.exports = {
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
     }).then(() => {
-      return queryInterface.addIndex('tags', { fields: ['value'] })
+      return queryInterface.addIndex('Tags', { fields: ['value'] })
     }).then(() => {
-      queryInterface.addIndex('tags', { fields: ['key'] })
+      queryInterface.addIndex('Tags', { fields: ['key'] })
     })
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('tags');
+    return queryInterface.dropTable('Tags');
   }
 };
