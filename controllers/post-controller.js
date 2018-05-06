@@ -8,7 +8,7 @@ module.exports = {
           ctx.throw(400, e.message)
         })
 
-      let user = await ctx.app.db.users.findByAddress(ctx.request.auth.address)
+      let user = await ctx.app.db.User.findByAddress(ctx.request.auth.address)
 
       let post = {
         ...ctx.request.body,
@@ -26,7 +26,7 @@ module.exports = {
       const etherumEvents = await ctx.app.helpers.ethereum.createNewPost(ctx, ipfsHash, user.address)
 
       // Add index in mysql
-      const postModel = await ctx.app.db.posts.createNewPost({
+      const postModel = await ctx.app.db.Post.createNewPost({
         title: post.title,
         ipfs_hash: ipfsHash,
         tags: post.tags,
