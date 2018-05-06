@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     key: DataTypes.STRING,
     value: DataTypes.STRING,
   }
-  const tag = sequelize.define('tags', schema, options)
+  const Tag = sequelize.define('Tag', schema, options)
 
-  return tag
+  return Tag
 }
