@@ -23,7 +23,7 @@ module.exports = {
   },
 
   login: async(ctx) => {
-    let user = await ctx.app.db.users.findByEmail(ctx.request.body.email)
+    let user = await ctx.app.db.User.findByEmail(ctx.request.body.email)
 
     if (user == undefined) {
       throw new Error('User not found')
