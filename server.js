@@ -34,10 +34,6 @@ require('./models')(app)
 
 const router = new Router()
 
-router.get('*', async ctx => {
-  await handle(ctx.req, ctx.res)
-  ctx.respond = false
-})
 
 app.use(async (ctx, next) => {
   ctx.res.statusCode = 200
