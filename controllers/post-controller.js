@@ -41,7 +41,43 @@ module.exports = {
       console.log(e)
       ctx.throw(e.status, e.message)
     }
-  }, 
+  },
+
+  async comment(ctx) {
+    try {
+      await ctx.app.schemas.comment.create(ctx.request.body)
+        .catch(e => {
+          ctx.throw(400, e.message)
+        })
+
+      const comment = ctx.request.body
+
+      // Sending data into IPFS
+      const files = await ctx.app.helpers.ipfs.add([{
+        content: Buffer.from(JSON.stringify(comment.content))
+      }])
+      const ipfsHash = files[0].hash
+
+      // Add record into ethereum
+      const etherumEvents = await ctx.app.helpers.ethereum.createNewPost(ctx, ipfsHash, comment.address)
+
+      // Add into mysql
+      let post = await ctx.app.db.Post.findById(ctx.params.postId)
+
+      let data = {
+        ipfs_hash: ipfsHash,
+        ...ctx.request.body
+      }
+      
+      await post.createNewComment(data)
+
+      ctx.body = await post.reload()
+
+    } catch (e) {
+      console.log(e)
+      ctx.throw(e.status, e.message)
+    }
+  },
 
   async get(ctx) {
     const path = ctx.request.query.path
