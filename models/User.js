@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', schema, options)
 
   User.findByAddress = (address) => {
-    console.log(User)
     return User.findOne({
       where: {
         address: address

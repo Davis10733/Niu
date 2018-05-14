@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Post.associate = (sequelize) => {
     Post.hasMany(sequelize.models.Tag, { foreignKey: 'item_id' })
+    Post.hasMany(sequelize.models.Comment, { foreignKey: 'post_id' })
   }
 
   Post.createNewPost = async(data) => {
@@ -25,6 +26,24 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     return Post.create(data, { include: sequelize.models.Tag})
+  }
+
+  Post.findById = async(id) => {
+    return Post.findOne({
+      where: {
+        id: id
+      },
+      include: [ 
+        sequelize.models.Tag,
+        sequelize.models.Comment
+      ]
+    })
+  }
+
+  Post.prototype.createNewComment = async function(data) {
+    const comment = await sequelize.models.Comment.create(data)
+
+    return this.addComment(comment)
   }
 
   return Post
