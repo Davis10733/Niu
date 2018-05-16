@@ -80,8 +80,25 @@ module.exports = {
   },
 
   async get(ctx) {
-    const path = ctx.request.query.path
-    const files = await ctx.app.helpers.ipfs.files.cat(`/ipfs/${path}`)
-    ctx.body = JSON.parse(files.toString())
+    try {
+      let post = await ctx.app.db.Post.findById(ctx.params.postId)
+      if (post == undefined) {
+        ctx.throw(404, 'Post notfound')
+      }
+      post = post.toJSON()
+      post = await ctx.app.helpers.ethereum.filterInvalidArticle(post)
+      if (post == undefined) {
+        ctx.throw(400, 'Invalid post')
+      }
+      post.Comments = await ctx.app.helpers.ethereum.filterInvalidArticle(post.Comments)
+
+      post = await ctx.app.helpers.ipfs.getContent(post)
+      post.Comments = await ctx.app.helpers.ipfs.getContent(post.Comments)
+
+      ctx.body = post
+    } catch (e) {
+      console.log(e)
+      ctx.throw(e.status, e.message)
+    }
   }
 }
