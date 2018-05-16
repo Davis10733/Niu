@@ -54,7 +54,7 @@ module.exports = {
 
       // Sending data into IPFS
       const files = await ctx.app.helpers.ipfs.add([{
-        content: Buffer.from(JSON.stringify(comment.content))
+        content: Buffer.from(JSON.stringify({ content: comment.content }))
       }])
       const ipfsHash = files[0].hash
 
