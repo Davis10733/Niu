@@ -86,5 +86,18 @@ module.exports = {
   async getAllPost(ctx) {
     const getAllPost = insiderManager.methods.getAllPost(ctx.request.body.address)
     return callContractMethod(ctx, getAllPost, 'GetAllPost', { writerAddress: ctx.request.body.address })
-  }
+  },
+
+  async filterInvalidArticle(articles) {
+    if (!(articles instanceof Array)) {
+      if (await insiderManager.methods.isValidArticle(convertIpfsToByte32(articles.ipfs_hash)).call()) {
+        return articles
+      }
+
+      return undefined
+    }
+    return articles.filter(async(article) => {
+      return await insiderManager.methods.isValidArticle(convertIpfsToByte32(article.ipfs_hash)).call()
+    })
+  },
 }
