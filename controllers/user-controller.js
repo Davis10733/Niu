@@ -8,35 +8,13 @@ module.exports = {
         .catch((e) => {
           ctx.throw(400, 'Invalid request')
         })
-
-      let user = await ctx.app.db.User.findByEmail(ctx.request.body.email)
  
-      if (user != null) {
-        if (user.address != undefined) {
-          ctx.throw(400, 'This email has been already registered')
-        }
-        const userObject = await ctx.app.helpers.user.createUserObject(ctx)
-        await user.update(userObject)
+      const userObject = await ctx.app.helpers.user.createUserObject(ctx)
 
-        // add account into insider manager contract
-        await ctx.app.helpers.ethereum.registerNewWriter(ctx, user.address)
+      // add account into insider manager contract
+      await ctx.app.helpers.ethereum.registerNewWriter(ctx, userObject)
 
-        ctx.body = {
-          'message': 'success'
-        }
-        return
-      }
-      
-      const activeCode = Math.floor(Math.random() * Math.floor(10000))
-      const userObject = {
-        email: ctx.request.body.email,
-        activeCode: activeCode,
-      }
-
-      await ctx.app.db.User.create(userObject)
-
-      // sending email
-      await ctx.app.helpers.mail.sendActiveMail(userObject)
+      fs.writeFileSync(`./keystore/${userObject.email}.json`, JSON.stringify(userObject), 'utf8')
 
       ctx.body = {
         'message' : 'success'
