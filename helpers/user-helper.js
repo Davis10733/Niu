@@ -11,13 +11,13 @@ module.exports = {
 
     // create key
     let dk = keythereum.create()
-    let keyObject = keythereum.dump(hashPw, dk.privateKey, dk.salt, dk.iv)
+    let keystore = keythereum.dump(hashPw, dk.privateKey, dk.salt, dk.iv)
 
     return {
       username: ctx.request.body.username,
       password: hashPw,
-      address: keyObject.address, 
-      keyObject: keyObject,
+      address: keystore.address, 
+      keystore: keystore,
       email: ctx.request.body.email,
     }
   },
