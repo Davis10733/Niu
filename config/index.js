@@ -23,14 +23,11 @@ module.exports = {
     publicKey: process.env.MJ_APIKEY_PUBLIC,
     privateKey: process.env.MJ_APIKEY_PRIVATE,
   },
-  db: {
-    database: _.defaultTo(process.env.MYSQL_DATABASE, 'insider'),
-    user: _.defaultTo(process.env.MYSQL_USER, 'mysql'),
-    password: _.defaultTo(process.env.MYSQL_PASSWORD, 'test'),
-    host: _.defaultTo(process.env.MYSQL_HOST, 'localhost')
-  },
   jwt: {
     secret: _.defaultTo(process.env.JWT_SECRET, 'secret')
+  },
+  redis: {
+    host: _.defaultTo(process.env.REDIS_HOST, 'localhost')
   }
 }
 
