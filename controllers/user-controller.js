@@ -36,6 +36,9 @@ module.exports = {
           ctx.throw(400, e.message)
         })
 
+      //store object into redis
+      ctx.app.helpers.redis.client.set(userObject.email, JSON.stringify(userObject), 'EX', 60 * 120)
+
       const jwt = await ctx.app.helpers.user.createJwt(userObject)
 
       ctx.body = {
