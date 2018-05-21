@@ -7,10 +7,7 @@ const insiderManager = new web3.eth.Contract(insiderManagerContract.abi, config.
 const keystore = keythereum.importFromFile(config.ethereum.address, './')
 const Base58 = require('base-58')
 
-const callContractMethod = async (ctx, contractMethod, eventName, filter) => {
-
-  //unlock keystore
-  const account = web3.eth.accounts.decrypt(keystore, config.ethereum.password)
+const callContractMethod = async (ctx, contractMethod, eventName, filter, account) => {
 
   //estimate gas
   const estimateGas = await contractMethod.estimateGas({
