@@ -24,31 +24,7 @@ module.exports = {
       ctx.throw(e.status, e.message)
     }
   },
-  async active(ctx) {
-    try {
-      await ctx.app.schemas.user.active(ctx.request.body)
-        .catch ((e) => {
-          ctx.throw(400, e.message)
-        })
-
-      let user = await ctx.app.db.User.findByEmail(ctx.request.body.email)
-      if (user == undefined) {
-        ctx.throw(404, 'user not found')
-      }
-
-      if (user.activeCode !== parseInt(ctx.request.body.activeCode)) {
-        ctx.throw(400, 'Active code is not correct')
-      }
-
-      ctx.body = {
-        'message': 'success'
-      }
-    } catch (e) {
-      console.log(e)
-      ctx.throw(e.status, e.message)
-    }
-  },
-  async login(ctx) {
+ async login(ctx) {
     try {
       await ctx.app.schemas.user.login(ctx.request.body)
         .catch(e => {
