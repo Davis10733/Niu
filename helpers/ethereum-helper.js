@@ -69,9 +69,10 @@ const convertByte32ToIpfs = (hex) => {
 }
 
 module.exports = {
-  async registerNewWriter(ctx, address) {
-    const createNewWriter = insiderManager.methods.createNewWriter(address)
-    return callContractMethod(ctx, createNewWriter, 'NewWriterCreated', { newWriterAddress: address })
+  async registerNewWriter(ctx, userObject) {
+    const createNewWriter = insiderManager.methods.createNewWriter(userObject.address)
+    const account = await web3.eth.accounts.decrypt(keystore, config.ethereum.password) 
+    return callContractMethod(ctx, createNewWriter, 'NewWriterCreated', { newWriterAddress: userObject.address }, account)
   },
 
   async createNewPost(ctx, ipfsHash, writer) {
