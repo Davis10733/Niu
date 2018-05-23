@@ -55,10 +55,19 @@ class Post {
   }
 
   createNewComment(data) {
-    return Commment.createNewComment({
+    return Comment.createNewComment({
       ...data,
-      post_id: this.id
+      _id: uuidv4(),
+      post_id: this.id,
+      createdAt: moment().unix(),
     })
+  }
+
+  async reload() {
+    this.value.tags = await Tag.findByPostId(this.id)
+    this.value.comments = await Comment.findByPostId(this.id)
+    let post = await db.get(this.id)
+    return this
   }
 
   toJSON() {
