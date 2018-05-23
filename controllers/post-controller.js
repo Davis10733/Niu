@@ -43,28 +43,20 @@ module.exports = {
           ctx.throw(400, e.message)
         })
 
-      const comment = ctx.request.body
+      const comment = {
+        ...ctx.request.body,
+        publicKey: ctx.request.auth.address
+      }
 
-      // Sending data into IPFS
-      const files = await ctx.app.helpers.ipfs.add([{
-        content: Buffer.from(JSON.stringify({ content: comment.content }))
-      }])
-      const ipfsHash = files[0].hash
+      // Add into orbitdb
+      let post = await ctx.app.db.Post.findById(ctx.params.postId)
+      let ipfsHash = await post.createNewComment(comment)
 
       // Add record into ethereum
-      const etherumEvents = await ctx.app.helpers.ethereum.createNewPost(ctx, ipfsHash, comment.address)
+      const etherumEvents = await ctx.app.helpers.ethereum.createNewPost(ctx, ipfsHash, comment.publicKey)
 
-      // Add into mysql
-      let post = await ctx.app.db.Post.findById(ctx.params.postId)
-
-      let data = {
-        ipfs_hash: ipfsHash,
-        ...ctx.request.body
-      }
-      
-      await post.createNewComment(data)
-
-      ctx.body = await post.reload()
+      await post.reload()
+      ctx.body = post.toJSON()
 
     } catch (e) {
       console.log(e)
@@ -78,15 +70,6 @@ module.exports = {
       if (post == undefined) {
         ctx.throw(404, 'Post notfound')
       }
-      post = post.toJSON()
-      post = await ctx.app.helpers.ethereum.filterInvalidArticle(post)
-      if (post == undefined) {
-        ctx.throw(400, 'Invalid post')
-      }
-      post.Comments = await ctx.app.helpers.ethereum.filterInvalidArticle(post.Comments)
-
-      post = await ctx.app.helpers.ipfs.getContent(post)
-      post.Comments = await ctx.app.helpers.ipfs.getContent(post.Comments)
 
       ctx.body = post
     } catch (e) {
