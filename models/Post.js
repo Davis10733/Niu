@@ -2,6 +2,7 @@ const ipfs = require('../helpers/ipfs-helper.js')
 const db = ipfs.db['insider-test.post']
 const moment = require('moment')
 const Tag = require('./Tag.js')
+const uuidv4 = require('uuid/v4');
 
 class Post {
   constructor(post, tag) {
@@ -19,8 +20,9 @@ class Post {
       data.tags = undefined;
     }
     let doc = {
-      _id: moment().unix(),
+      _id: uuidv4(),
       ...data,
+      createdAt: moment().unix(),
     }
 
     const hash = await db.put(doc)
@@ -32,6 +34,7 @@ class Post {
           key: 'meta',
           value: tag,
           post_id: doc._id,
+          createdAt: moment().unix(),
         })
       }))
     }
