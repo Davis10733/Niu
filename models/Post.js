@@ -1,50 +1,65 @@
-module.exports = (sequelize, DataTypes) => {
-  const options = {
-    timestamp: true,
-  }
-  const schema = {
-    title: DataTypes.STRING,
-    ipfs_hash: DataTypes.STRING,
-  }
-  const Post = sequelize.define('Post', schema, options)
+const ipfs = require('../helpers/ipfs-helper.js')
+const db = ipfs.db['insider-test.post']
+const moment = require('moment')
+const Tag = require('./Tag.js')
 
-  Post.associate = (sequelize) => {
-    Post.hasMany(sequelize.models.Tag, { foreignKey: 'item_id' })
-    Post.hasMany(sequelize.models.Comment, { foreignKey: 'post_id' })
+class Post {
+  constructor(post, tag) {
+    this.value = {}
+    this.value.post = post
+    this.value.tag = tag
+    this.id = post.id
   }
 
-  Post.createNewPost = async(data) => {
+  static async createNewPost(data) {
 
+    let tagsData = [];
     if (data.tags !== undefined) {
-      data.Tags = data.tags.map((tag) => {
-        return {
-          item_type: 'post',
-          key: 'meta',
-          value: tag
-        }
-      }) 
+      tagsData = data.tags;
+      data.tags = undefined;
+    }
+    let doc = {
+      _id: moment().unix(),
+      ...data,
     }
 
-    return Post.create(data, { include: sequelize.models.Tag})
+    const hash = await db.put(doc)
+
+    if (tagsData.length > 0) {
+      await Promise.all(tagsData.map(tag => {
+        return Tag.createNewTag( {
+          _id: `${hash}-${tag}`,
+          key: 'meta',
+          value: tag,
+          post_id: doc._id,
+        })
+      }))
+    }
+
+    return {
+      ipfsHash: hash,
+      ...doc
+    }
   }
 
-  Post.findById = async(id) => {
-    return Post.findOne({
-      where: {
-        id: id
-      },
-      include: [ 
-        sequelize.models.Tag,
-        sequelize.models.Comment
-      ]
+  static async findById(id) {
+    let tags = await Tag.findByPostId(id)
+    let post = await db.get(id)
+    return new Post(post, tags)
+  }
+
+  createNewComment(data) {
+    return Commment.createNewComment({
+      ...data,
+      post_id: this.id
     })
   }
 
-  Post.prototype.createNewComment = async function(data) {
-    const comment = await sequelize.models.Comment.create(data)
-
-    return this.addComment(comment)
+  toJSON() {
+    return {
+      ...this.value
+    }
   }
-
-  return Post
 }
+
+module.exports = Post
