@@ -1,27 +1,11 @@
 const config =  require('../config')
 const ipfsAPI = require('ipfs-api')
+const OrbitDB = require('orbit-db')
 const ipfs = ipfsAPI(config.ipfs.host, config.ipfs.port, {protocol: 'http'})
+const orbitdb = new OrbitDB(ipfs)
 
-ipfs.getContent = async(items) => {
-  if (!(items instanceof Array)) {
-    let content = await ipfs.files.cat(`/ipfs/${items.ipfs_hash}`)
-    content = JSON.parse(content.toString())
-    return {
-      ...items,
-      ...content,
-    }
-  }
-
-  items = items.map(async(item) => {
-    let content = await ipfs.files.cat(`/ipfs/${item.ipfs_hash}`)
-    content = JSON.parse(content.toString())
-
-    return {
-      ...item,
-      ...content,
-    }
-  })
-
-  return items
+module.exports = {
+  ipfsApi: ipfs,
+  orbitdb: orbitdb,
+  db: {}
 }
-module.exports = ipfs
