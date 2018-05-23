@@ -32,7 +32,7 @@ class Post {
     if (tagsData.length > 0) {
       await Promise.all(tagsData.map(tag => {
         return Tag.createNewTag( {
-          _id: `${hash}-${tag}`,
+          _id: uuidv4(),
           key: 'meta',
           value: tag,
           post_id: doc._id,
