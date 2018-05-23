@@ -75,10 +75,11 @@ module.exports = {
     return callContractMethod(ctx, createNewWriter, 'NewWriterCreated', { newWriterAddress: userObject.address }, account)
   },
 
-  async createNewPost(ctx, ipfsHash, writer) {
+  async createNewPost(ctx, ipfsHash, writerAddress) {
     //TODO: solve keystore
-    const createNewPost = insiderManager.methods.createNewPostByManager(convertIpfsToByte32(ipfsHash), writer)
-    return callContractMethod(ctx, createNewPost, 'NewPostCreated', { ipfsHash: ipfsHash })
+    const createNewPost = insiderManager.methods.createNewPostByManager(convertIpfsToByte32(ipfsHash), writerAddress)
+    const account = await web3.eth.accounts.decrypt(keystore, config.ethereum.password)
+    return callContractMethod(ctx, createNewPost, 'NewPostCreated', { ipfsHash: ipfsHash }, account)
   },
 
   async getAllPost(ctx) {
