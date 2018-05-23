@@ -19,6 +19,7 @@ const createServer = async() => {
   // setup oribit db connection
   app.helpers.ipfs.db['insider-test.post'] = await app.helpers.ipfs.orbitdb.docs('insider-test.post')
   app.helpers.ipfs.db['insider-test.tag'] = await app.helpers.ipfs.orbitdb.docs('insider-test.tag')
+  app.helpers.ipfs.db['insider-test.comment'] = await app.helpers.ipfs.orbitdb.docs('insider-test.comment')
 
   app.use(helmet())
   app.use(logger())
