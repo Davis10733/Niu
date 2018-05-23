@@ -2,6 +2,7 @@ const keythereum = require('keythereum')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const config = require('../config')
+const fs = require('fs')
 
 module.exports = {
   createUserObject: async(ctx) => {
@@ -23,24 +24,27 @@ module.exports = {
   },
 
   login: async(ctx) => {
-    let user = await ctx.app.db.User.findByEmail(ctx.request.body.email)
-
-    if (user == undefined) {
-      throw new Error('User not found')
+    let user = {}
+    try {
+      user = fs.readFileSync(`./keystore/${ctx.request.body.email}.json`)
+    } catch (e) {
+      if (e.code == 'ENOENT') {
+        throw new Error('user not found')
+      }
     }
-
+    user = JSON.parse(user)
     let result = await bcrypt.compare(ctx.request.body.password, user.password)
 
     if (result == false) {
       throw new Error('Invlaid password')
     }
 
-    return user.toJSON()
+    return user
   },
   
   createJwt: async(user) => {
     return jwt.sign({
-      'userId': user.id,
+      'email': user.email,
       'address': user.address,
       'exp': Math.floor(Date.now() / 1000) + (60 * 120)
     }, config.jwt.secret)
