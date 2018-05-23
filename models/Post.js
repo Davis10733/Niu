@@ -2,6 +2,7 @@ const ipfs = require('../helpers/ipfs-helper.js')
 const db = ipfs.db['insider-test.post']
 const moment = require('moment')
 const Tag = require('./Tag.js')
+const Comment = require('./Comment.js')
 const uuidv4 = require('uuid/v4');
 
 class Post {
@@ -48,8 +49,9 @@ class Post {
 
   static async findById(id) {
     let tags = await Tag.findByPostId(id)
+    let comments = await Comment.findByPostId(id)
     let post = await db.get(id)
-    return new Post(post, tags)
+    return new Post(post, tags, comments)
   }
 
   createNewComment(data) {
