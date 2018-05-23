@@ -5,11 +5,12 @@ const Tag = require('./Tag.js')
 const uuidv4 = require('uuid/v4');
 
 class Post {
-  constructor(post, tag) {
+  constructor(post, tag = undefined, comment = undefined) {
     this.value = {}
-    this.value.post = post
-    this.value.tag = tag
-    this.id = post.id
+    this.value.post = post[0]
+    this.value.tags = tag
+    this.value.comments = comment
+    this.id = post[0]._id
   }
 
   static async createNewPost(data) {
