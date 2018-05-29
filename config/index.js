@@ -10,6 +10,11 @@ module.exports = {
     port: normalizePort(_.defaultTo(process.env.IPFS_PORT, 3000)),
     main: _.defaultTo(process.env.IPFS_MAIN, ''),
   },
+  orbit: {
+    comment: process.env.ORBIT_DB_COMMENT,
+    post: process.env.ORBIT_DB_POST,
+    tag: process.env.ORBIT_DB_TAG,
+  },
   ethereum: {
     host: _.defaultTo(process.env.ETHEREUM_HOST, 'localhost'),
     port: _.defaultTo(process.env.ETHEREUM_PORT, '8546'),
