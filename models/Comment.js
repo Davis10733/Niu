@@ -1,5 +1,5 @@
 const ipfs = require('../helpers/ipfs-helper.js')
-const db = ipfs.db['insider-test.comment']
+const db = ipfs.db['insider.comment']
 
 class Comment {
   static async createNewComment(data) {

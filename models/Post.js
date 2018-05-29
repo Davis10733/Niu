@@ -1,5 +1,5 @@
 const ipfs = require('../helpers/ipfs-helper.js')
-const db = ipfs.db['insider-test.post']
+const db = ipfs.db['insider.post']
 const moment = require('moment')
 const Tag = require('./Tag.js')
 const Comment = require('./Comment.js')

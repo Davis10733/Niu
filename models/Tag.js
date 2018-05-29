@@ -1,5 +1,5 @@
 const ipfs = require('../helpers/ipfs-helper.js')
-const db = ipfs.db['insider-test.tag']
+const db = ipfs.db['insider.tag']
 
 class Tag {
   static async createNewTag(data) {
