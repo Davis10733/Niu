@@ -4,14 +4,15 @@ const moment = require('moment')
 const Tag = require('./Tag.js')
 const Comment = require('./Comment.js')
 const uuidv4 = require('uuid/v4');
+const Collection = require('./Collection.js')
 
 class Post {
   constructor(post, tag = undefined, comment = undefined) {
     this.value = {}
-    this.value.post = post[0]
+    this.value.post = post
     this.value.tags = tag
     this.value.comments = comment
-    this.id = post[0]._id
+    this.id = post._id
   }
 
   static async createNewPost(data) {
@@ -51,7 +52,16 @@ class Post {
     let tags = await Tag.findByPostId(id)
     let comments = await Comment.findByPostId(id)
     let post = await db.get(id)
-    return new Post(post, tags, comments)
+    return new Post(post[0], tags, comments)
+  }
+
+  static findAll() {
+    let posts = db.query((doc) => doc.createdAt > 0)
+    posts = posts.map(post => {
+      return new Post(post)
+    })
+
+    return new Collection(...posts)
   }
 
   createNewComment(data) {
