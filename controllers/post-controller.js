@@ -76,5 +76,16 @@ module.exports = {
       console.log(e)
       ctx.throw(e.status, e.message)
     }
+  },
+
+  async list(ctx) {
+    try {
+      let posts = await ctx.app.db.Post.findAll()
+      ctx.body = posts
+    } catch (e) {
+      console.log(e) 
+      ctx.throw(e.status, e.message)
+    }
+  
   }
 }
