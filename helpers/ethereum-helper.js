@@ -7,10 +7,7 @@ const insiderManager = new web3.eth.Contract(insiderManagerContract.abi, config.
 const keystore = keythereum.importFromFile(config.ethereum.address, './')
 const Base58 = require('base-58')
 
-const callContractMethod = async (ctx, contractMethod, eventName, filter) => {
-
-  //unlock keystore
-  const account = web3.eth.accounts.decrypt(keystore, config.ethereum.password)
+const callContractMethod = async (ctx, contractMethod, eventName, filter, account) => {
 
   //estimate gas
   const estimateGas = await contractMethod.estimateGas({
@@ -72,15 +69,17 @@ const convertByte32ToIpfs = (hex) => {
 }
 
 module.exports = {
-  async registerNewWriter(ctx, address) {
-    const createNewWriter = insiderManager.methods.createNewWriter(address)
-    return callContractMethod(ctx, createNewWriter, 'NewWriterCreated', { newWriterAddress: address })
+  async registerNewWriter(ctx, userObject) {
+    const createNewWriter = insiderManager.methods.createNewWriter(userObject.address)
+    const account = await web3.eth.accounts.decrypt(keystore, config.ethereum.password) 
+    return callContractMethod(ctx, createNewWriter, 'NewWriterCreated', { newWriterAddress: userObject.address }, account)
   },
 
-  async createNewPost(ctx, ipfsHash, writer) {
+  async createNewPost(ctx, ipfsHash, writerAddress) {
     //TODO: solve keystore
-    const createNewPost = insiderManager.methods.createNewPostByManager(convertIpfsToByte32(ipfsHash), writer)
-    return callContractMethod(ctx, createNewPost, 'NewPostCreated', { ipfsHash: ipfsHash })
+    const createNewPost = insiderManager.methods.createNewPostByManager(convertIpfsToByte32(ipfsHash), writerAddress)
+    const account = await web3.eth.accounts.decrypt(keystore, config.ethereum.password)
+    return callContractMethod(ctx, createNewPost, 'NewPostCreated', { ipfsHash: ipfsHash }, account)
   },
 
   async getAllPost(ctx) {

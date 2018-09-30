@@ -5,6 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "base-58": "^0.0.1",
+    "dotenv": "^5.0.1",
+    "truffle": "^4.1.7",
     "web3": "^0.20.4",
     "zeppelin-solidity": "^1.6.0"
   }

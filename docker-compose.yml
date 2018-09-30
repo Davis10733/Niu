@@ -1,12 +1,7 @@
 version: '2.0'
 
 services: 
-  insider-database:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: insider
-      MYSQL_DATABASE: insider
-      MYSQL_USER: mysql
-      MYSQL_PASSWORD: test
+  insider-redis:
+    image: redis:4.0.6
     ports:
-      - "3306:3306"
+      - "6379:6379"

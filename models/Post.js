@@ -1,50 +1,90 @@
-module.exports = (sequelize, DataTypes) => {
-  const options = {
-    timestamp: true,
-  }
-  const schema = {
-    title: DataTypes.STRING,
-    ipfs_hash: DataTypes.STRING,
-  }
-  const Post = sequelize.define('Post', schema, options)
+const ipfs = require('../helpers/ipfs-helper.js')
+const db = ipfs.db['insider.post']
+const moment = require('moment')
+const Tag = require('./Tag.js')
+const Comment = require('./Comment.js')
+const uuidv4 = require('uuid/v4');
+const Collection = require('./Collection.js')
 
-  Post.associate = (sequelize) => {
-    Post.hasMany(sequelize.models.Tag, { foreignKey: 'item_id' })
-    Post.hasMany(sequelize.models.Comment, { foreignKey: 'post_id' })
+class Post {
+  constructor(post, tag = undefined, comment = undefined) {
+    this.value = {}
+    this.value.post = post
+    this.value.tags = tag
+    this.value.comments = comment
+    this.id = post._id
   }
 
-  Post.createNewPost = async(data) => {
+  static async createNewPost(data) {
 
+    let tagsData = [];
     if (data.tags !== undefined) {
-      data.Tags = data.tags.map((tag) => {
-        return {
-          item_type: 'post',
-          key: 'meta',
-          value: tag
-        }
-      }) 
+      tagsData = data.tags;
+      data.tags = undefined;
+    }
+    let doc = {
+      _id: uuidv4(),
+      ...data,
+      createdAt: moment().unix(),
     }
 
-    return Post.create(data, { include: sequelize.models.Tag})
+    const hash = await db.put(doc)
+
+    if (tagsData.length > 0) {
+      await Promise.all(tagsData.map(tag => {
+        return Tag.createNewTag( {
+          _id: uuidv4(),
+          key: 'meta',
+          value: tag,
+          post_id: doc._id,
+          createdAt: moment().unix(),
+        })
+      }))
+    }
+
+    return {
+      ipfsHash: hash,
+      ...doc
+    }
   }
 
-  Post.findById = async(id) => {
-    return Post.findOne({
-      where: {
-        id: id
-      },
-      include: [ 
-        sequelize.models.Tag,
-        sequelize.models.Comment
-      ]
+  static async findById(id) {
+    let tags = await Tag.findByPostId(id)
+    let comments = await Comment.findByPostId(id)
+    let post = await db.get(id)
+    return new Post(post[0], tags, comments)
+  }
+
+  static findAll() {
+    let posts = db.query((doc) => doc.createdAt > 0)
+    posts = posts.map(post => {
+      return new Post(post)
+    })
+
+    return new Collection(...posts)
+  }
+
+  createNewComment(data) {
+    return Comment.createNewComment({
+      ...data,
+      _id: uuidv4(),
+      post_id: this.id,
+      createdAt: moment().unix(),
     })
   }
 
-  Post.prototype.createNewComment = async function(data) {
-    const comment = await sequelize.models.Comment.create(data)
-
-    return this.addComment(comment)
+  async reload() {
+    this.value.tags = await Tag.findByPostId(this.id)
+    this.value.comments = await Comment.findByPostId(this.id)
+    let post = await db.get(this.id)
+    return this
   }
 
-  return Post
+  toJSON() {
+    return {
+      ...this.value
+    }
+  }
 }
+
+module.exports = Post

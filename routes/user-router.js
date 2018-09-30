@@ -3,7 +3,6 @@ const ctrl = require('../controllers').user
 const router = new Router()
 
 router.post('/user', ctrl.create)
-router.post('/user/active', ctrl.active)
 router.post('/user/login', ctrl.login)
 
 module.exports = router.routes()

@@ -11,38 +11,49 @@ const routes = require('./routes')
 
 const fs = require('fs')
 
-const app = new Koa()
+const createServer = async() => {
+  const app = new Koa()
 
-require('./helpers')(app)
+  require('./helpers')(app)
 
-app.use(helmet())
-app.use(logger())
+  // setup oribit db connection
+  app.helpers.ipfs.db['insider.post'] = await app.helpers.ipfs.orbitdb.docs(config.orbit.post)
+  app.helpers.ipfs.db['insider.tag'] = await app.helpers.ipfs.orbitdb.docs(config.orbit.tag)
+  app.helpers.ipfs.db['insider.comment'] = await app.helpers.ipfs.orbitdb.docs(config.orbit.comment)
+  app.helpers.ipfs.db['insider.post'].load()
+  app.helpers.ipfs.db['insider.tag'].load()
+  app.helpers.ipfs.db['insider.comment'].load()
 
-app.use(
-  paginator.middleware({
-    allowAll: false,
-    maximum: 25,
+  app.use(helmet())
+  app.use(logger())
+  app.use(
+    paginator.middleware({
+      allowAll: false,
+      maximum: 25,
+    })
+  )
+  app.use(cors(config.cors))
+  app.use(bodyParser(config.bodyParser))
+  app.use(routes.routes())
+  app.use(routes.allowedMethods())
+
+  require('./schemas')(app)
+  require('./models')(app)
+
+  const router = new Router()
+
+
+  app.use(async (ctx, next) => {
+    ctx.res.statusCode = 200
+    await next()
   })
-)
-app.use(cors(config.cors))
-app.use(bodyParser(config.bodyParser))
-app.use(routes.routes())
-app.use(routes.allowedMethods())
 
-require('./schemas')(app)
-require('./models')(app)
+  app.use(router.routes())
 
-const router = new Router()
+  const server = app.listen(config.server.port, err => {
+    if (err) throw err
+    console.log(`Ready on http://localhost:${config.server.port}`)
+  })
+}
 
-
-app.use(async (ctx, next) => {
-  ctx.res.statusCode = 200
-  await next()
-})
-
-app.use(router.routes())
-
-const server = app.listen(config.server.port, err => {
-  if (err) throw err
-  console.log(`Ready on http://localhost:${config.server.port}`)
-})
+createServer()

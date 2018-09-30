@@ -1,14 +1,14 @@
-module.exports = (sequelize, DataTypes) => {
-  const options = {
-    timestamp: true,
-  }
-  const schema = {
-    item_id: DataTypes.BIGINT,
-    item_type: DataTypes.STRING,
-    key: DataTypes.STRING,
-    value: DataTypes.STRING,
-  }
-  const Tag = sequelize.define('Tag', schema, options)
+const ipfs = require('../helpers/ipfs-helper.js')
+const db = ipfs.db['insider.tag']
 
-  return Tag
+class Tag {
+  static async createNewTag(data) {
+    return db.put(data)
+  }
+
+  static async findByPostId(id) {
+    return db.query((doc) => doc.post_id == id )
+  }
 }
+
+module.exports = Tag
