@@ -1,6 +1,0 @@
-{
-  "development": {
-    "url": "mysql://mysql:test@localhost:3306/insider",
-    "dialect": "mysql"
-  }
-}
