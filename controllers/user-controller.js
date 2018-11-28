@@ -11,9 +11,6 @@ module.exports = {
  
       const userObject = await ctx.app.helpers.user.createUserObject(ctx)
 
-      // add account into insider manager contract
-      await ctx.app.helpers.ethereum.registerNewWriter(ctx, userObject)
-
       fs.writeFileSync(`./keystore/${userObject.email}.json`, JSON.stringify(userObject), 'utf8')
 
       ctx.body = {
