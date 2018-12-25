@@ -1,19 +1,17 @@
 {
   "name": "insider",
   "scripts": {
-    "dev": "docker-compose up -d && node server.js",
-    "drop-db": "./node_modules/.bin/sequelize db:drop --config ./service/database/config/config.json",
-    "create-db": "./node_modules/.bin/sequelize db:create --config ./service/database/config/config.json",
-    "create-table": "./node_modules/.bin/sequelize db:migrate --config ./service/database/config/config.json  --migrations-path ./service/database/migrations",
-    "geth-run": "geth --ws --wsport \"8546\" --wsorigins \"*\" --wsaddr=\"0.0.0.0\" --rpc --rpcport \"8545\" --rpccorsdomain \"*\" --rpcaddr=\"0.0.0.0\" --rpcapi \"personal,admin,db,eth,miner,net,web3,txpool,clique\" --datadir ./service --keystore ./service/geth/keystore console"
+    "dev": "docker-compose up -d",
+    "start": "yarn install && node server.js",
+    "ipfs": "ipfs daemon --enable-pubsub-experiment"
   },
   "dependencies": {
     "@jermysu/koa-auth-middleware": "^1.0.0",
     "base-58": "^0.0.1",
-    "bcrypt": "^2.0.1",
+    "bcrypt": "^3.0.3",
     "camelcase": "^5.0.0",
-    "dotenv": "^5.0.1",
-    "ipfs-api": "^20.0.0",
+    "dotenv": "^6.2.0",
+    "ipfs-api": "^26.1.2",
     "jsonwebtoken": "^8.2.1",
     "kcors": "^2.2.1",
     "keythereum": "^1.0.2",
@@ -25,13 +23,12 @@
     "koa-router": "^7.4.0",
     "lodash": "^4.17.5",
     "mysql2": "^1.5.3",
-    "node-mailjet": "^3.2.1",
     "orbit-db": "git+https://github.com/orbitdb/orbit-db.git#master",
     "redis": "^2.8.0",
+    "request": "^2.88.0",
     "sequelize": "^4.37.6",
     "sequelize-cli": "^4.0.0",
     "uuidv4": "^1.0.0",
-    "web3": "^1.0.0-beta.33",
     "yup": "^0.24.1"
   },
   "license": "MIT"
